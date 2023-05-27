@@ -9,6 +9,9 @@ torchvision = "*"
 torchaudio = "*"
 matplotlib = "*"
 pandas = "*"
+ipykernel = "*"
+plotly = "*"
+nbformat = "==4.2.0"
 
 [dev-packages]
 
