@@ -17,11 +17,8 @@ class Net(nn.Module):
         self.atom_embedding = nn.Embedding(num_atoms, num_node_features)
         self.device = device
 
-    def nodes_embedding(self, indices, noise_level):
+    def nodes_embedding(self, indices, noise_levels):
         encodings = self.atom_embedding(indices)
-        noise_levels = torch.full(
-            (indices.shape[0], indices.shape[1], 1), noise_level
-        ).to(self.device)
         embedding = torch.cat((encodings, noise_levels), dim=2)
         return embedding
 
@@ -37,11 +34,11 @@ class Net(nn.Module):
                 edges[n, j, i] = coordinates[n, j] - coordinates[n, i]
         return edges.to(self.device)
 
-    def forward(self, indices, coordinates, bonds, noise_level):
+    def forward(self, indices, coordinates, bonds, noise_levels):
         indices = indices.to(self.device)
         coordinates = coordinates.to(self.device)
         bonds = bonds.to(self.device)
-        nodes = self.nodes_embedding(indices, noise_level)
+        nodes = self.nodes_embedding(indices, noise_levels)
         edges = self.edges_embedding(bonds, coordinates)
         mask = torch.ones((nodes.shape[0], nodes.shape[1])).bool().to(self.device)
         nodes, _ = self.gt(nodes, edges, mask=mask)

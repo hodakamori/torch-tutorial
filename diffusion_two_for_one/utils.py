@@ -31,10 +31,17 @@ def smiles2structure(smiles):
     )
 
 
-def add_diffusion_noise(coordinates, noise_level, noise_multiplier=0.1):
-    alpha_list = torch.Tensor([1 - noise_multiplier] * noise_level)
-    alpha_bar = torch.prod(alpha_list)
+def add_diffusion_noise(coordinates, noise_levels, max_noise_level=25):
+    beta = torch.linspace(0.0001, 0.02, max_noise_level)
+    alpha = 1 - beta
+    alpha_bars = torch.cumprod(alpha, dim=0)
+    alpha_bar = torch.zeros_like(noise_levels, dtype=torch.float32)
+    for i in range(noise_levels.shape[0]):
+        for j in range(noise_levels.shape[1]):
+            for k in range(noise_levels.shape[2]):
+                alpha_bar[i, j, k] = alpha_bars[noise_levels[i, j, k] - 1]
     noised_coordinates = torch.sqrt(alpha_bar) * coordinates + torch.sqrt(
         1 - alpha_bar
     ) * torch.randn_like(coordinates)
+
     return noised_coordinates
