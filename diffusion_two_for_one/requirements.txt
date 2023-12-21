@@ -1,0 +1,3 @@
+graph-transformer-pytorch
+rdkit
+MDAnalysis
