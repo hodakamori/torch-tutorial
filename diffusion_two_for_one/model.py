@@ -4,7 +4,7 @@ import torch.nn as nn
 
 
 class Net(nn.Module):
-    def __init__(self, num_atoms, num_node_features, device=torch.device("cuda")):
+    def __init__(self, num_atoms, num_node_features, device=torch.device("cpu")):
         super().__init__()
         self.gt = GraphTransformer(
             dim=num_node_features + 1,
@@ -18,6 +18,11 @@ class Net(nn.Module):
         self.device = device
 
     def nodes_embedding(self, indices, noise_levels):
+        noise_levels = (
+            noise_levels.unsqueeze(1)
+            .unsqueeze(2)
+            .expand(indices.shape[0], indices.shape[1], -1)
+        )
         encodings = self.atom_embedding(indices)
         embedding = torch.cat((encodings, noise_levels), dim=2)
         return embedding
@@ -37,10 +42,13 @@ class Net(nn.Module):
     def forward(self, indices, coordinates, bonds, noise_levels):
         indices = indices.to(self.device)
         coordinates = coordinates.to(self.device)
+        coordinates.requires_grad_()
         bonds = bonds.to(self.device)
         nodes = self.nodes_embedding(indices, noise_levels)
         edges = self.edges_embedding(bonds, coordinates)
         mask = torch.ones((nodes.shape[0], nodes.shape[1])).bool().to(self.device)
+        nodes, edges = self.gt(nodes, edges, mask=mask)
         nodes, _ = self.gt(nodes, edges, mask=mask)
         energy = self.linear(nodes).sum()
-        return energy
+        gradient = torch.autograd.grad(energy, coordinates, create_graph=True)[0]
+        return gradient

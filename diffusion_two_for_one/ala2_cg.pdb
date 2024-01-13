@@ -7,11 +7,11 @@ REMARK     285 PROTEIN DATA BANK CONVENTIONS REQUIRE THAT
 REMARK     285 CRYST1 RECORD IS INCLUDED, BUT THE VALUES ON
 REMARK     285 THIS RECORD ARE MEANINGLESS.
 MODEL        1
-ATOM      1  X   UNK X   1      16.349  13.614  16.264  1.00  0.00              
-ATOM      2  X   UNK X   1      15.636  15.319  15.994  1.00  0.00              
-ATOM      3  X   UNK X   1      17.145  16.592  15.874  1.00  0.00              
-ATOM      4  X   UNK X   1      14.917  17.685  15.723  1.00  0.00              
-ATOM      5  X   UNK X   1      15.786  19.605  16.065  1.00  0.00              
+ATOM      1  X   UNK X   1      16.244  14.114  16.225  1.00  0.00              
+ATOM      2  X   UNK X   1      15.699  15.314  16.018  1.00  0.00              
+ATOM      3  X   UNK X   1      16.418  16.541  16.300  1.00  0.00              
+ATOM      4  X   UNK X   1      15.568  17.761  15.975  1.00  0.00              
+ATOM      5  X   UNK X   1      16.126  18.953  16.194  1.00  0.00              
 ENDMDL
 CONECT    1    2
 CONECT    2    1    3
