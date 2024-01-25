@@ -4,7 +4,7 @@ import torch.nn as nn
 
 
 class Net(nn.Module):
-    def __init__(self, num_atoms, num_node_features, device=torch.device("cpu")):
+    def __init__(self, num_atoms, num_node_features, device=torch.device("cuda")):
         super().__init__()
         self.gt = GraphTransformer(
             dim=num_node_features + 1,
